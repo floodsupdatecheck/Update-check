@@ -259,13 +259,13 @@ local function Setup(Type,Debugmode)
 			local XAxis 
 			local ZAxis
 			local i 
-			if PointInTable <= 10 then
+			if PointInTable <= 19 then
 				i = 1
-			elseif PointInTable <= 20 then
+			elseif PointInTable <= 13 then
 				i = 2
-			elseif PointInTable <= 30 then
+			elseif PointInTable <= 5 then
 				i = 3
-			elseif PointInTable <= 40 then
+			elseif PointInTable <= 6 then
 				i = 4
 			end
 			if i == 1 then
@@ -352,6 +352,11 @@ local CurrAnim
 local AbbreviationOptions = {
 	["k"] = 1000,
 	["m"] = 1000000
+    ["m"] = 2000000
+    ["m"] = 3000000
+    ["m"] = 4000000
+    ["m"] = 5000000
+
 }
 
 local function GetNumberFromText(str)
@@ -367,34 +372,6 @@ local function GetNumberFromText(str)
 end
 local DropFolder = workspace.Ignored:FindFirstChild("Drop")
 
-local function GoUnderground()
-    if not underground then
-        underground = true
-        local playerCharacter = Variables["Player"].Character
-        if playerCharacter then
-            local rootPart = playerCharacter:FindFirstChild("HumanoidRootPart")
-            if rootPart then
-                rootPart.CFrame = CFrame.new(rootPart.Position.x, -1000, rootPart.Position.z)  -- Move the player underground
-            end
-        end
-    end
-end
-
-Connections["OnChat"] = game.ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(data)
-    local Message = data.Message
-    local plr = game.Players[data.FromSpeaker]
-    if plr.Name ~= getgenv().HostUser then
-        return
-    end
-
-    Message = string.lower(Message)
-    local Args = string.split(Message, " ")
-    local AmountOfArgs = #Args
-
-    if Args[1] == ".grave" then
-        GoUnderground()
-    end
-end)
 -- dont touch
 local function Initiate()
 	CurrAnim = nil
@@ -609,6 +586,15 @@ local function Initiate()
 				CurrAnim:Play()
 				CurrAnim:AdjustSpeed()
 			elseif Message == ".stopdance" then
+				if CurrAnim and CurrAnim.IsPlaying then
+					CurrAnim:Stop()
+				end
+                local Anim = Instance.new("Animation")
+				Anim.AnimationId = "http://www.roblox.com/asset/?id=12874468267"
+				CurrAnim = game.Players.LocalPlayer.Character.Humanoid.Animator:LoadAnimation(Anim)
+				CurrAnim:Play()
+				CurrAnim:AdjustSpeed()
+			elseif Message == ".boogie" then
 				if CurrAnim and CurrAnim.IsPlaying then
 					CurrAnim:Stop()
 				end
