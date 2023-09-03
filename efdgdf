@@ -221,10 +221,10 @@ local SetupsTable = {
 	},
 	Admin = {
 		Origin = CFrame.new(-884.12915, -38.3972931, -545.291809, -0.99998939, 2.69316498e-08, -0.00460755778, 2.6944301e-08, 1, -2.68358624e-09, 0.00460755778, -2.80770518e-09, -0.99998939),
-		ZMultiplier = 3,
-		XMultiplier = 8,
-		PerRow = 10,
-		Rows = 4,
+		ZMultiplier = 19,
+		XMultiplier = 13,
+		PerRow = 5,
+		Rows = 6,
 	},
 	Klub = {
 		Origin = CFrame.new(-237.016571, -4.87585974, -411.940063, 0.994918466, -1.5840282e-08, -0.100683607, 6.8329018e-09, 1, -8.9807088e-08, 0.100683607, 8.86627731e-08, 0.994918466),
@@ -350,24 +350,20 @@ local function RemoveWallet()
 end
 local CurrAnim
 local AbbreviationOptions = {
-    ["k"] = 1000,
-    ["m"] = 1000000,
-    ["mm"] = 2000000, -- Add mm as 2 million
+	["k"] = 1000,
+	["m"] = 1000000
 }
 
 local function GetNumberFromText(str)
-    str = string.lower(str)
-    if str:find("k") then
-        local newStr = string.gsub(str, "k", "")
-        return tonumber(newStr) * AbbreviationOptions["k"]
-    elseif str:find("m") then
-        local newStr = string.gsub(str, "m", "")
-        return tonumber(newStr) * AbbreviationOptions["m"]
-    elseif str:find("mm") then -- Check for mm
-        local newStr = string.gsub(str, "mm", "")
-        return tonumber(newStr) * AbbreviationOptions["mm"]
-    end
-    return tonumber(str)
+	str = string.lower(str)
+	if str:find("k") then
+		local newStr = string.gsub(str, "k", "")
+		return tonumber(newStr)*AbbreviationOptions["k"]
+	elseif str:find("m") then
+		local newStr = string.gsub(str, "m", "")
+		return tonumber(newStr)*AbbreviationOptions["m"]
+	end
+	return tonumber(str)
 end
 local DropFolder = workspace.Ignored:FindFirstChild("Drop")
 
@@ -430,7 +426,17 @@ local function Initiate()
 					ZAxis = -8
 					angle = (40-PointInTable)
 				end
-                -- meow for me
+			elseif Args[1] == ".stopdrop" then
+				Drop(false)
+			elseif Args[1] == ".reset" then
+				if Variables["Player"].Character then
+					local FULLY_LOADED_CHAR = Variables["Player"].Character:FindFirstChild("FULLY_LOADED_CHAR")
+					if FULLY_LOADED_CHAR then
+						FULLY_LOADED_CHAR.Parent = Services["RP"]
+						FULLY_LOADED_CHAR:Destroy()
+					end
+					Variables["Player"].Character:Destroy()
+				end
 				Initiate()
 			elseif Args[1] == ".airlock" then
 				AirLock(true)
@@ -490,7 +496,7 @@ local function Initiate()
 					CurrAnim:Stop()
 				end
 				local Anim = Instance.new("Animation")
-				Anim.AnimationId = "http://www.roblox.com/asset/?id=12874468267"
+				Anim.AnimationId = "http://www.roblox.com/asset/?id=5917459365"
 				CurrAnim = game.Players.LocalPlayer.Character.Humanoid.Animator:LoadAnimation(Anim)
 				CurrAnim:Play()
 				CurrAnim:AdjustSpeed()
