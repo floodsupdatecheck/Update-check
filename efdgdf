@@ -367,23 +367,34 @@ local function GetNumberFromText(str)
 end
 local DropFolder = workspace.Ignored:FindFirstChild("Drop")
 
-local function SetGrave(Type)
-    if Type == true then
-        local grave = Instance.new("Part")
-        grave.Size = Vector3.new(5, 1, 5) -- Adjust the size as needed
-        grave.Position = Variables["Player"].Character.HumanoidRootPart.Position - Vector3.new(0, 5, 0) -- Adjust the position as needed
-        grave.Anchored = true
-        grave.BrickColor = BrickColor.new("Bright red") -- Adjust color as needed
-        grave.Parent = workspace
-        CmdSettings["Grave"] = grave
-    elseif Type == false then
-        local grave = CmdSettings["Grave"]
-        if grave then
-            grave:Destroy()
+local function GoUnderground()
+    if not underground then
+        underground = true
+        local playerCharacter = Variables["Player"].Character
+        if playerCharacter then
+            local rootPart = playerCharacter:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(rootPart.Position.x, -1000, rootPart.Position.z)  -- Move the player underground
+            end
         end
-        CmdSettings["Grave"] = nil
     end
 end
+
+Connections["OnChat"] = game.ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(data)
+    local Message = data.Message
+    local plr = game.Players[data.FromSpeaker]
+    if plr.Name ~= getgenv().HostUser then
+        return
+    end
+
+    Message = string.lower(Message)
+    local Args = string.split(Message, " ")
+    local AmountOfArgs = #Args
+
+    if Args[1] == ".grave" then
+        GoUnderground()
+    end
+end)
 -- dont touch
 local function Initiate()
 	CurrAnim = nil
