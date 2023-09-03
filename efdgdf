@@ -580,21 +580,21 @@ local function Initiate()
 				if CurrAnim and CurrAnim.IsPlaying then
 					CurrAnim:Stop()
 				end
-				local Anim = Instance.new("Animation")
-				Anim.AnimationId = "http://www.roblox.com/asset/?id=4349242221"
-				CurrAnim = game.Players.LocalPlayer.Character.Humanoid.Animator:LoadAnimation(Anim)
-				CurrAnim:Play()
-				CurrAnim:AdjustSpeed()
-			elseif Message == ".stopdance" then
-				if CurrAnim and CurrAnim.IsPlaying then
-					CurrAnim:Stop()
-				end
                 local Anim = Instance.new("Animation")
 				Anim.AnimationId = "http://www.roblox.com/asset/?id=12874468267"
 				CurrAnim = game.Players.LocalPlayer.Character.Humanoid.Animator:LoadAnimation(Anim)
 				CurrAnim:Play()
 				CurrAnim:AdjustSpeed()
 			elseif Message == ".boogie" then
+				if CurrAnim and CurrAnim.IsPlaying then
+					CurrAnim:Stop()
+				end
+				local Anim = Instance.new("Animation")
+				Anim.AnimationId = "http://www.roblox.com/asset/?id=4349242221"
+				CurrAnim = game.Players.LocalPlayer.Character.Humanoid.Animator:LoadAnimation(Anim)
+				CurrAnim:Play()
+				CurrAnim:AdjustSpeed()
+			elseif Message == ".stopdance" then
 				if CurrAnim and CurrAnim.IsPlaying then
 					CurrAnim:Stop()
 				end
