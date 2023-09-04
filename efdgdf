@@ -11,12 +11,12 @@ local Player = game:GetService("Players").LocalPlayer
 local Mouse = Player:GetMouse()
 local SpeedGlitch = false
  
-Circle.Transparency = dnss.FOV.Transparency
-Circle.Radius = dnss.FOV.Size * 3
-Circle.Visible = dnss.FOV.Enabled
-Circle.Color = dnss.FOV.Color
-Circle.Thickness = dnss.FOV.Thickness
-Circle.Filled = dnss.FOV.Filled
+Circle.Transparency = fnn.FOV.Transparency
+Circle.Radius = fnn.FOV.Size * 3
+Circle.Visible = fnn.FOV.Enabled
+Circle.Color = fnn.FOV.Color
+Circle.Thickness = fnn.FOV.Thickness
+Circle.Filled = fnn.FOV.Filled
  
 local positionData = {}
 local velocityCache = {}
@@ -65,12 +65,12 @@ local function smoothVelocity(character, smoothingFactor)
 end
  
 local function getPingBasedPrediction()
-    if dnss.Misc.AutoPrediction then
+    if fnn.Misc.AutoPrediction then
         local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
         local calculatedPrediction = (((ping - 0) / 200) * (0.2 - 0.1)) + 0.1
-        return dnss.SilentAim.Prediction + calculatedPrediction
+        return fnn.SilentAim.Prediction + calculatedPrediction
     else
-        return dnss.SilentAim.Prediction
+        return fnn.SilentAim.Prediction
     end
 end
  
@@ -83,7 +83,7 @@ pcall(function()
         end
     end
     local function updateValueLabelText()
-        if dnss.MemSpoofer.Enabled and not updating then
+        if fnn.MemSpoofer.Enabled and not updating then
             updating = true
             spoofer = string.format('%d.%dMB', math.random(MemSpoofer.Start, MemSpoofer.End), math.random(10, 99))
             performanceStats['1'].StatsMiniTextPanelClass.ValueLabel.Text = spoofer
@@ -99,26 +99,26 @@ pcall(function()
 end)
  
 function wallCheck(position, ignoreList)
-    if dnss.Checks.wallCheck then
+    if fnn.Checks.wallCheck then
         return not workspace:FindPartOnRayWithIgnoreList(
         Ray.new(workspace.CurrentCamera.CFrame.p, position - workspace.CurrentCamera.CFrame.p), ignoreList)
     end
 end
  
 function KnockedCheck(_)
-    if _.Character.BodyEffects["K.O"] and dnss.Checks.KOCheck then
+    if _.Character.BodyEffects["K.O"] and fnn.Checks.KOCheck then
         return _.Character.BodyEffects["K.O"].Value ~= true
     end
 end
  
 function GrabbedCheck(_)
-    if dnss.Checks.GrabbedCheck then
+    if fnn.Checks.GrabbedCheck then
         return not _.Character:FindFirstChild("GRABBING_CONSTRAINT")
     end
 end
  
 function isSameCrew(Player1, Player2)
-    if dnss.Checks.CrewCheck and Player1:FindFirstChild("DataFolder") and Player1.DataFolder:FindFirstChild("Information") and Player1.DataFolder.Information:FindFirstChild("Crew") and Player2:FindFirstChild("DataFolder") and Player2.DataFolder:FindFirstChild("Information") and Player2.DataFolder.Information:FindFirstChild("Crew") then
+    if fnn.Checks.CrewCheck and Player1:FindFirstChild("DataFolder") and Player1.DataFolder:FindFirstChild("Information") and Player1.DataFolder.Information:FindFirstChild("Crew") and Player2:FindFirstChild("DataFolder") and Player2.DataFolder:FindFirstChild("Information") and Player2.DataFolder.Information:FindFirstChild("Crew") then
         local Player1Crew = Player1.DataFolder.Information.Crew.Value
         local Player2Crew = Player2.DataFolder.Information.Crew.Value
         if Player1Crew ~= nil and Player2Crew ~= nil and Player1Crew ~= "" and Player2Crew ~= "" then
@@ -130,8 +130,8 @@ end
  
 local userInputService = game:GetService("UserInputService")
 userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode.Name == dnss.SilentAim.ToggleKey and not gameProcessedEvent then
-        dnss.SilentAim.Enabled = not dnss.SilentAim.Enabled
+    if input.KeyCode.Name == fnn.SilentAim.ToggleKey and not gameProcessedEvent then
+        fnn.SilentAim.Enabled = not fnn.SilentAim.Enabled
     end
 end)
  
@@ -210,19 +210,19 @@ function getClosestPlayer()
 end
  
 local function AntiGroundShots()
-    if self ~= nil and dnss.AntiGroundShots.Enabled and self.Character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+    if self ~= nil and fnn.AntiGroundShots.Enabled and self.Character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall then
             local currentvelocity = self.Character.HumanoidRootPart.Velocity
-            self.Character.HumanoidRootPart.Velocity = Vector3.new(currentvelocity.X, currentvelocity.Y / dnss.AntiGroundShots.TakeOff, currentvelocity.Z)
+            self.Character.HumanoidRootPart.Velocity = Vector3.new(currentvelocity.X, currentvelocity.Y / fnn.AntiGroundShots.TakeOff, currentvelocity.Z)
     end
 end
  
 function isAnti()
     local calculateVelocityAverage = smoothVelocity(self.Character)
-    return self.Character.HumanoidRootPart.Velocity.Magnitude > 50 and calculateVelocityAverage * dnss.SilentAim.Prediction or self.Character.HumanoidRootPart.Velocity * dnss.SilentAim.Prediction
+    return self.Character.HumanoidRootPart.Velocity.Magnitude > 50 and calculateVelocityAverage * fnn.SilentAim.Prediction or self.Character.HumanoidRootPart.Velocity * fnn.SilentAim.Prediction
 end
 function AntiCurve()
     local character = game.Players.LocalPlayer.Character
-    if dnss.Misc.AntiCurve and character and character.PrimaryPart then
+    if fnn.Misc.AntiCurve and character and character.PrimaryPart then
         local characterCf = character.PrimaryPart.CFrame
         local target = self.Character.HumanoidRootPart
         local targetPos = target.Position
@@ -239,7 +239,7 @@ game.RunService.Heartbeat:Connect(function()
     AntiCurve()
     AntiGroundShots()
     getPingBasedPrediction()
-    if dnss.SilentAim.Enabled then
+    if fnn.SilentAim.Enabled then
         self = getClosestPlayer()
         if self then
             rPoint = cls(self.Character)
@@ -254,21 +254,21 @@ game.RunService.Heartbeat:Connect(function()
 end)
  
 local function processInput(Key)
-    if Key == string.lower(dnss.Macro.Key) and dnss.Macro.Enabled then
+    if Key == string.lower(fnn.Macro.Key) and fnn.Macro.Enabled then
         SpeedGlitch = not SpeedGlitch
         if SpeedGlitch == true then
             repeat
-                task.wait(dnss.Macro.Speed / 100)
-                if dnss.Macro.Type == "Keyboard" then
+                task.wait(fnn.Macro.Speed / 100)
+                if fnn.Macro.Type == "Keyboard" then
                     game:GetService("VirtualInputManager"):SendKeyEvent(true, "I", false, game)
-                    task.wait(dnss.Macro.Speed / 100)
+                    task.wait(fnn.Macro.Speed / 100)
                     game:GetService("VirtualInputManager"):SendKeyEvent(true, "O", false, game)
-                elseif dnss.Macro.Type == "Mouse" then
+                elseif fnn.Macro.Type == "Mouse" then
                     game:GetService("VirtualInputManager"):SendMouseWheelEvent("0", "0", true, game)
-                    task.wait(dnss.Macro.Speed / 100)
+                    task.wait(fnn.Macro.Speed / 100)
                     game:GetService("VirtualInputManager"):SendMouseWheelEvent("0", "0", false, game)
                 end
-                task.wait(dnss.Macro.Speed / 100)
+                task.wait(fnn.Macro.Speed / 100)
             until SpeedGlitch == false
         end
     end
