@@ -1,802 +1,243 @@
-local Notify = AkaliNotif.Notify;
+local Ordium = {functions = {}}
 
-if getgenv().fnnloaded == true then
-    if getgenv().fnn.Options.Notifications == true then
+local Vector2New, Cam, Mouse, client, find, Draw, Inset, players, RunService, UIS=
+    Vector2.new,
+    workspace.CurrentCamera,
+    game.Players.LocalPlayer:GetMouse(),
+    game.Players.LocalPlayer,
+    table.find,
+    Drawing.new,
+    game:GetService("GuiService"):GetGuiInset().Y,
+    game.Players, 
+    game.RunService,
+    game:GetService("UserInputService")
 
-Notify({
-Description = "Settings From Script Updated.";
-Title = "fnn";
-Duration = 1.5;
-});
-        return
-    end
-    end
-    getgenv().fnnloaded = true
-    
-    if getgenv().fnn.Options.Notifications == true then
 
-Notify({
-Description = "Checking Assets";
-Title = "fnn";
-Duration = 1.5;
-});
-wait(2)
-Notify({
-Description = "Checking User";
-Title = "fnn";
-Duration = 1.5;
-});
-wait(2)
-Notify({
-Description = "fnn Loaded Enjoy";
-Title = "fnn";
-Duration = 1.5;
-});
+local mf, rnew = math.floor, Random.new
+
+local Targetting
+local lockedCamTo
+
+local userinputservice = game:GetService('UserInputService')
+local RS = game:GetService('RunService')
+
+local Circle = Drawing.new("Circle")
+
+local c = Drawing.new('Circle')
+c.Radius = getgenv().Ordium.SilentAim.FOVData.Radius *3.71
+c.Thickness = 4.5 
+c.Color = Color3.new(1,1,1)
+c.Visible = getgenv().Ordium.SilentAim.FOVData.Visibility
+
+local c22 = Drawing.new('Circle')
+c22.Radius = getgenv().Ordium.SilentAim.FOVData.Radius *3.69
+c22.Thickness = 4.5 
+c22.Color = Color3.new(1,1,1)
+c22.Visible = getgenv().Ordium.SilentAim.FOVData.Visibility
+
+local oc1 = Drawing.new('Circle')
+oc1.Radius = getgenv().Ordium.SilentAim.FOVData.Radius *3.7
+oc1.Thickness = 2.5 
+oc1.Color = Color3.new(0,0,0)
+oc1.Visible = getgenv().Ordium.SilentAim.FOVData.Visibility
+
+local oc2 = Drawing.new('Circle')
+oc2.Radius = getgenv().Ordium.SilentAim.FOVData.Radius *3.7
+oc2.Thickness = 2.5 
+oc2.Color = Color3.new(0,0,0)
+oc2.Visible = getgenv().Ordium.SilentAim.FOVData.Visibility
+ 
+local UpdateFOV = function()
+    c.Position = Vector2New(Mouse.X, Mouse.Y + (Inset))
 end
-wait(1)
-local targ = nil
-local Plr  = nil
 
-local Players, Client, Mouse, RS, Camera =
-    game:GetService("Players"),
-    game:GetService("Players").LocalPlayer,
-    game:GetService("Players").LocalPlayer:GetMouse(),
-    game:GetService("RunService"),
-    game:GetService("Workspace").CurrentCamera
+local UpdateFOV1 = function()
+    oc1.Position = Vector2New(Mouse.X, Mouse.Y + (Inset))
+end
 
-local silentcircle = Drawing.new("Circle")
+local UpdateFOV2 = function()
+    oc2.Position = Vector2New(Mouse.X, Mouse.Y + (Inset))
+end
 
-local tracercircle = Drawing.new("Circle")
-
-silentcircle.Transparency = getgenv(). Advati.Fov.Silent.Transparency
-silentcircle.Thickness = getgenv().fnn.Fov.Silent.Thickness
-silentcircle.Color = getgenv().fnn.Fov.Silent.Color
-silentcircle.Filled = getgenv().fnn.Fov.Silent.Filled
-
-tracercircle.Transparency = getgenv().fnn.Fov.Camlock.Transparency
-tracercircle.Thickness = getgenv().fnn.Fov.Camlock.Thickness
-tracercircle.Color = getgenv().fnn.Fov.Camlock.Color
-tracercircle.Filled = getgenv().fnn.Fov.Camlock.Filled
-
-local UpdateFOV = function ()
-    if (not silentcircle and not tracercircle) then
-        return silentcircle and tracercircle
-    end
-    tracercircle.Visible  = getgenv().fnn.Fov.Camlock.Visible
-    tracercircle.Radius   = getgenv().fnn.Fov.Camlock.Size * 2
-    tracercircle.Filled = getgenv().fnn.Fov.Camlock.Filled
-    tracercircle.Thickness = getgenv().fnn.Fov.Camlock.Thickness
-    tracercircle.Transparency = getgenv().fnn.Fov.Camlock.Transparency
-    tracercircle.Position = Vector2.new(Mouse.X, Mouse.Y + (game:GetService("GuiService"):GetGuiInset().Y))
-    tracercircle.Color = getgenv().fnn.Fov.Camlock.Color
-    tracercircle.NumSides = getgenv().fnn.Fov.Camlock.Sides
-    
-    silentcircle.Visible  = getgenv().fnn.Fov.Silent.Visible
-    silentcircle.Radius   = getgenv().fnn.Fov.Silent.Size * 2
-    silentcircle.Filled = getgenv().fnn.Fov.Silent.Filled
-    silentcircle.Thickness = getgenv().fnn.Fov.Silent.Thickness
-    silentcircle.Transparency = getgenv().fnn.Fov.Silent.Transparency
-    silentcircle.Position = Vector2.new(Mouse.X, Mouse.Y + (game:GetService("GuiService"):GetGuiInset().Y))
-    silentcircle.Color = getgenv().fnn.Fov.Silent.Color
-    silentcircle.NumSides = getgenv().fnn.Fov.Silent.Sides
-    return silentcircle and tracercircle
+local UpdateFOV3 = function()
+    c22.Position = Vector2New(Mouse.X, Mouse.Y + (Inset))
 end
 
 RS.Heartbeat:Connect(UpdateFOV)
+RS.Heartbeat:Connect(UpdateFOV1)
+RS.Heartbeat:Connect(UpdateFOV2)
+RS.Heartbeat:Connect(UpdateFOV3)
 
-local WallCheck = function(destination, ignore)
-    local Origin    = Camera.CFrame.p
-    local CheckRay  = Ray.new(Origin, destination - Origin)
-    local Hit       = game.workspace:FindPartOnRayWithIgnoreList(CheckRay, ignore)
-    return Hit      == nil
-end
-
-
-local WTS = function (Object)
-    local ObjectVector = Camera:WorldToScreenPoint(Object.Position)
-    return Vector2.new(ObjectVector.X, ObjectVector.Y)
-end
-
-local IsOnScreen = function (Object)
-    local IsOnScreen = Camera:WorldToScreenPoint(Object.Position)
-    return IsOnScreen
-end
-
-local FilterObjs = function (Object)
-    if string.find(Object.Name, "Gun") then
-        return
+if getgenv().Ordium.SilentAim.FOVData.Rainbow ~= false then
+    while true do
+        wait(0)
+    oc1.Color = Color3.fromHSV((tick() % 5 / 5), 1, 1)
+    oc2.Color = Color3.fromHSV((tick() % 5 / 5), 1, 1)
     end
-    if table.find({"Part", "MeshPart", "BasePart"}, Object.ClassName) then
+    end
+
+Ordium.functions.onKeyPress = function(inputObject)
+    if inputObject.KeyCode == Enum.KeyCode[getgenv().Ordium.SilentAim.Key:upper()] then
+        getgenv().Ordium.SilentAim.Enabled = not getgenv().Ordium.SilentAim.Enabled
+    end
+
+    if inputObject.KeyCode == Enum.KeyCode[getgenv().Ordium.Tracing.Key:upper()] then
+        getgenv().Ordium.Tracing.Enabled = not getgenv().Ordium.Tracing.Enabled
+        if getgenv().Ordium.Tracing.Enabled then
+            lockedCamTo = Ordium.functions.returnClosestPlayer(getgenv().Ordium.SilentAim.ChanceData.Chance)
+        end
+    end
+end
+
+UIS.InputBegan:Connect(Ordium.functions.onKeyPress)
+
+
+Ordium.functions.wallCheck = function(direction, ignoreList)
+    if not getgenv().Ordium.SilentAim.AimingData.CheckWalls then
         return true
     end
+
+    local ray = Ray.new(Cam.CFrame.p, direction - Cam.CFrame.p)
+    local part, _, _ = game:GetService("Workspace"):FindPartOnRayWithIgnoreList(ray, ignoreList)
+
+    return not part
 end
 
-local ClosestPlrFromMouse = function()
-    local Target, Closest = nil, 1/0
-    
-    for _ ,v in pairs(Players:GetPlayers()) do
-    	if getgenv().fnn.Checks.Wall then
-    		if (v.Character and v ~= Client and v.Character:FindFirstChild("HumanoidRootPart")) then
-    			local Position, OnScreen = Camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
-    			local Distance = (Vector2.new(Position.X, Position.Y) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-    
-    			if (silentcircle.Radius * 1.27 > Distance and Distance < Closest and OnScreen) and WallCheck(v.Character.HumanoidRootPart.Position, {Client, v.Character}) then
-    				Closest = Distance
-    				Target = v
-    	
-
-    			end
-    		end
-    	else
-    		if (v.Character and v ~= Client and v.Character:FindFirstChild("HumanoidRootPart")) then
-    			local Position, OnScreen = Camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
-    			local Distance = (Vector2.new(Position.X, Position.Y) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-    
-    			if (silentcircle.Radius * 1.27 > Distance and Distance < Closest and OnScreen) then
-    				Closest = Distance
-    				Target = v
-    			end
-    		end
-    	end
+Ordium.functions.pointDistance = function(part)
+    local OnScreen = Cam.WorldToScreenPoint(Cam, part.Position)
+    if OnScreen then
+        return (Vector2New(OnScreen.X, OnScreen.Y) - Vector2New(Mouse.X, Mouse.Y)).Magnitude
     end
-    return Target
 end
 
-local ClosestPlrFromMouse2 = function()
-    local Target, Closest = nil, tracercircle.Radius * 1.27
-    
-    for _ ,v in pairs(Players:GetPlayers()) do
-    	if (v.Character and v ~= Client and v.Character:FindFirstChild("HumanoidRootPart")) then
-        	if getgenv().fnn.Checks.Wall then
-        		local Position, OnScreen = Camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
-        		local Distance = (Vector2.new(Position.X, Position.Y) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-        
-        		if (Distance < Closest and OnScreen) and WallCheck(v.Character.HumanoidRootPart.Position, {Client, v.Character}) then
-        			Closest = Distance
-        			Target = v
-        		end
-        	    else
-        			local Position, OnScreen = Camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
-        			local Distance = (Vector2.new(Position.X, Position.Y) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-        
-        			if (Distance < Closest and OnScreen) then
-        				Closest = Distance
-        				Target = v
-        			end
-        		end
-            end
-        end
-    return Target
-end
+Ordium.functions.returnClosestPart = function(Character)
+    local data = {
+        dist = math.huge,
+        part = nil,
+        filteredparts = {},
+        classes = {"Part", "BasePart", "MeshPart"}
+    }
 
-local GetClosestBodyPart = function (character)
-    local ClosestDistance = 1/0
-    local BodyPart = nil
-    
-    if (character and character:GetChildren()) then
-        for _,  x in next, character:GetChildren() do
-            if FilterObjs(x) and IsOnScreen(x) then
-                local Distance = (WTS(x) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-                if (silentcircle.Radius * 1.27 > Distance and Distance < ClosestDistance) then
-                    ClosestDistance = Distance
-                    BodyPart = x
+    if not (Character and Character:IsA("Model")) then
+        return data.part
+    end
+    local children = Character:GetChildren()
+    for _, child in pairs(children) do
+        if table.find(data.classes, child.ClassName) then
+            table.insert(data.filteredparts, child)
+            for _, part in pairs(data.filteredparts) do
+                local dist = Ordium.functions.pointDistance(part)
+                if Circle.Radius > dist and dist < data.dist then
+                    data.part = part
+                    data.dist = dist
                 end
             end
         end
     end
-    return BodyPart
+    return data.part
 end
 
-local GetClosestBodyPartV2 = function (character)
-    local ClosestDistance = 1/0
-    local BodyPart = nil
-    
-    if (character and character:GetChildren()) then
-        for _,  x in next, character:GetChildren() do
-            if FilterObjs(x) and IsOnScreen(x) then
-                local Distance = (WTS(x) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-                if (Distance < ClosestDistance) then
-                    ClosestDistance = Distance
-                    BodyPart = x
-                end
+Ordium.functions.returnClosestPlayer = function (amount)
+    local data = {
+        dist = 1/0,
+        player = nil
+    }
+
+    amount = amount or nil
+
+    for _, player in pairs(players:GetPlayers()) do
+        if (player.Character and player ~= client) then
+            local dist = Ordium.functions.pointDistance(player.Character.HumanoidRootPart)
+            if Circle.Radius > dist and dist < data.dist and 
+            Ordium.functions.wallCheck(player.Character.Head.Position,{client, player.Character}) then
+                data.dist = dist
+                data.player = player
             end
         end
     end
-    return BodyPart
+    local calc = mf(rnew().NextNumber(rnew(), 0, 1) * 100) / 100
+    local use = getgenv().Ordium.SilentAim.ChanceData.UseChance
+    if use and calc <= mf(amount) / 100 then
+        return calc and data.player
+    else
+        return data.player
+    end
 end
 
-Mouse.KeyDown:Connect(function(Key)
-    local Keybind = getgenv().fnn.Camlock.Keybind:lower()
-    if (Key == Keybind) then
-        if getgenv().fnn.Camlock.Enabled == true then
-            IsTargetting = not IsTargetting
-            if IsTargetting then
-                Plr = ClosestPlrFromMouse2()
-            else
-                if Plr ~= nil then
-                    Plr = nil
-                    IsTargetting = false
-                end
-            end
-        end
+Ordium.functions.setAimingType = function (player, type)
+    local previousSilentAimPart = getgenv().Ordium.SilentAim.AimPart
+    local previousTracingPart = getgenv().Ordium.Tracing.AimPart
+    if type == "Closest Part" then
+        getgenv().Ordium.SilentAim.AimPart = tostring(Ordium.functions.returnClosestPart(player.Character))
+        getgenv().Ordium.Tracing.AimPart = tostring(Ordium.functions.returnClosestPart(player.Character))
+    elseif type == "Closest Point" then
+        Ordium.functions.returnClosestPoint()
+    elseif type == "Default" then
+        getgenv().Ordium.SilentAim.AimPart = previousSilentAimPart
+        getgenv().Ordium.Tracing.AimPart = previousTracingPart
+    else
+        getgenv().Ordium.SilentAim.AimPart = previousSilentAimPart
+        getgenv().Ordium.Tracing.AimPart = previousTracingPart
     end
-end)
-
-Mouse.KeyDown:Connect(function(Key)
-    local Keybind = getgenv().fnn.Silent.Keybind:lower()
-    if (Key == Keybind) and getgenv().fnn.Silent.UseKeybind == true then
-            if getgenv().fnn.Silent.Enabled == true then
-				getgenv().fnn.Silent.Enabled = false
-				if getgenv().fnn.Options.Notifications == true then
-				    
-local Notify = AkaliNotif.Notify;
-				Notify({
-Description = "Silent Disabled";
-Title = "Advati";
-Duration = 1.5;
-});
-end 
-                
-            else
-				getgenv().fnn.Silent.Enabled = true
-				if getgenv().fnn.Options.Notifications == true then
-				    
-local Notify = AkaliNotif.Notify;
-				Notify({
-Description = "Silent Enabled";
-Title = "Advati";
-Duration = 1.5;
-});
-end
-                
-            end
-        end
-    end
-)
-
-
-
-
-
-
-                            
-
-
-
-local grmt = getrawmetatable(game)
-local backupindex = grmt.__index
-setreadonly(grmt, false)
-
-grmt.__index = newcclosure(function(self, v)
-    if (getgenv().fnn.Silent.Enabled and Mouse and tostring(v) == "Hit") then
-        if targ and targ.Character then
-    		if getgenv().fnn.Silent.Predict then
-    			local endpoint = game.Players[tostring(targ)].Character[getgenv().fnn.Silent.Aimpart].CFrame + (
-    				game.Players[tostring(targ)].Character[getgenv().fnn.Silent.Aimpart].Velocity * getgenv().fnn.Silent.Prediction
-    			)
-    			return (tostring(v) == "Hit" and endpoint)
-    		else
-    			local endpoint = game.Players[tostring(targ)].Character[getgenv().fnn.Silent.Aimpart].CFrame
-    			return (tostring(v) == "Hit" and endpoint)
-    		end
-        end
-    end
-    return backupindex(self, v)
-end)
-
-
-
-RS.Heartbeat:Connect(function()
-	if getgenv().fnn.Silent.Enabled then
-	    if targ and targ.Character and targ.Character:WaitForChild(getgenv().fnn.Silent.Aimpart) then
-            if getgenv().fnn.Resolver.Enabled == true and targ.Character:WaitForChild("HumanoidRootPart").Velocity.magnitude > 70 then            
-                pcall(function()
-                    local TargetVel = targ.Character[getgenv().fnn.Silent.Aimpart]
-                    TargetVel.Velocity = Vector3.new(0, 0, 0)
-                    TargetVel.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-            
-                end)
-            end
-            if getgenv().fnn.Checks.AntiGroundShots == true and targ.Character:FindFirstChild("Humanoid") == Enum.HumanoidStateType.Freefall then
-                pcall(function()
-                    local TargetVelv5 = targ.Character[getgenv().fnn.Silent.Aimpart]
-                    TargetVelv5.Velocity = Vector3.new(TargetVelv5.Velocity.X, (TargetVelv5.Velocity.Y * 5), TargetVelv5.Velocity.Z)
-                    TargetVelv5.AssemblyLinearVelocity = Vector3.new(TargetVelv5.Velocity.X, (TargetVelv5.Velocity.Y * 5), TargetVelv5.Velocity.Z)
-                end)
-            end
-            
-            if getgenv().fnn.Resolver.Enabled == true then            
-                pcall(function()
-                    local TargetVelv2 = targ.Character[getgenv().fnn.Silent.Aimpart]
-                    TargetVelv2.Velocity = Vector3.new(TargetVelv2.Velocity.X, 0, TargetVelv2.Velocity.Z)
-                    TargetVelv2.AssemblyLinearVelocity = Vector3.new(TargetVelv2.Velocity.X, 0, TargetVelv2.Velocity.Z)
-                end)
-            end
-	    end
-	end
-	
-
-
-
-if getgenv().fnn.Custom.Shake == true then
-       if Plr.Character.Humanoid.FloorMaterial == Enum.Material.Air then
-       
-           getgenv().fnn.Camlock.ShakeValue = getgenv().fnn.Custom.AirShakeValue
-       else
-        getgenv().fnn.Camlock.ShakeValue  = getgenv().fnn.Custom.GroundShakeValue
-
-  end
 end
 
-if getgenv().fnn.Custom.Smoothness == true then
-       if Plr.Character.Humanoid.FloorMaterial == Enum.Material.Air then
-       
-           getgenv().fnn.Camlock.SmoothnessValue = getgenv().fnn.Custom.AirSmoothnessValue
-       else
-        getgenv().fnn.Camlock.SmoothnessValue = getgenv().fnn.Custom.GroundSmoothnessValue
-  end
-end
-
-
-
-
-    if getgenv().fnn.Camlock.Enabled == true then
-        if getgenv().fnn.Resolver.Enabled == true and Plr and Plr.Character and Plr.Character:WaitForChild(getgenv().fnn.Camlock.Aimpart) and Plr.Character:WaitForChild("HumanoidRootPart").Velocity.magnitude > 70 then
-            pcall(function()
-                local TargetVelv3 = Plr.Character[getgenv().fnn.Camlock.Aimpart]
-                TargetVelv3.Velocity = Vector3.new(0, 0, 0)
-                TargetVelv3.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-            end)
-        end
-        if getgenv().fnn.Checks.AntiGroundShots == true and Plr.Character:FindFirstChild("Humanoid") == Enum.HumanoidStateType.Freefall then
-                pcall(function()
-                    local TargetVelv5 = Plr.Character[getgenv().fnn.Camlock.Aimpart]
-                    TargetVelv5.Velocity = Vector3.new(TargetVelv5.Velocity.X, (TargetVelv5.Velocity.Y * 5), TargetVelv5.Velocity.Z)
-                    TargetVelv5.AssemblyLinearVelocity = Vector3.new(TargetVelv5.Velocity.X, (TargetVelv5.Velocity.Y * 5), TargetVelv5.Velocity.Z)
-                end)
-        end
-    
-        if getgenv().fnn.Resolver.Enabled == true and Plr and Plr.Character and Plr.Character:WaitForChild(getgenv().fnn.Camlock.Aimpart) then
-            pcall(function()
-                local TargetVelv4 = Plr.Character[getgenv().fnn.Camlock.Aimpart]
-                TargetVelv4.Velocity = Vector3.new(TargetVelv4.Velocity.X, 0, TargetVelv4.Velocity.Z)
-                TargetVelv4.AssemblyLinearVelocity = Vector3.new(TargetVelv4.Velocity.X, 0, TargetVelv4.Velocity.Z)
-            end)
+Ordium.functions.aimingCheck = function (player)
+    if getgenv().Ordium.SilentAim.AimingData.CheckKnocked == true and player and player.Character then
+        if player.Character.BodyEffects["K.O"].Value then
+            return true
         end
     end
-end)
+    if getgenv().Ordium.SilentAim.AimingData.CheckGrabbed == true and player and player.Character then
+        if player.Character:FindFirstChild("GRABBING_CONSTRAINT") then
+            return true
+        end
+    end
+    return false
+end
 
-RS.RenderStepped:Connect(function()
-	if getgenv().fnn.Silent.Enabled then
-        if getgenv().fnn.Checks.Knocked == true and targ and targ.Character then 
-            local KOd = targ.Character:WaitForChild("BodyEffects")["K.O"].Value
-            local Grabbed = targ.Character:FindFirstChild("GRABBING_CONSTRAINT") ~= nil
-            if KOd or Grabbed then
-                targ = nil
-            end
-        end
-	end
-    if getgenv().fnn.Camlock.Enabled == true then
-        if getgenv().fnn.Checks.Knocked == true and Plr and Plr.Character then 
-            local KOd = Plr.Character:WaitForChild("BodyEffects")["K.O"].Value
-            local Grabbed = Plr.Character:FindFirstChild("GRABBING_CONSTRAINT") ~= nil
-            if KOd or Grabbed then
-                Plr = nil
-                IsTargetting = false
-            end
-        end
-        
-		if getgenv().fnn.Checks.DisableOnDeath == true and Plr and Plr.Character:FindFirstChild("Humanoid") then
-			if Plr.Character.Humanoid.health < 2 then
-				Plr = nil
-				IsTargetting = false
-			end
-		end
-		if getgenv().fnn.Checks.DisableOnDeath == true and Plr and Plr.Character:FindFirstChild("Humanoid") then
-			if Client.Character.Humanoid.health < 2 then
-				Plr = nil
-				IsTargetting = false
-			end
-		end
-        if getgenv().fnn.Checks.DisableOutsideFov == true and Plr and Plr.Character and Plr.Character:WaitForChild("HumanoidRootPart") then
-            if
-            Camlock.Radius <
-                (Vector2.new(
-                    Camera:WorldToScreenPoint(Plr.Character.HumanoidRootPart.Position).X,
-                    Camera:WorldToScreenPoint(Plr.Character.HumanoidRootPart.Position).Y
-                ) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-             then
-                Plr = nil
-                IsTargetting = false
-            end
-        end
-		if getgenv().fnn.Camlock.Predict and Plr and Plr.Character and Plr.Character:FindFirstChild(getgenv().fnn.Camlock.Aimpart) then
-			if getgenv().fnn.Camlock.Shake then
-				local Main = CFrame.new(Camera.CFrame.p,Plr.Character[getgenv().fnn.Camlock.Aimpart].Position + Plr.Character[getgenv().fnn.Camlock.Aimpart].Velocity * getgenv().fnn.Camlock.Prediction+
-				Vector3.new(
-					math.random(-getgenv().fnn.Camlock.ShakeValue, getgenv().fnn.Camlock.ShakeValue),
-					math.random(-getgenv().fnn.Camlock.ShakeValue, getgenv().fnn.Camlock.ShakeValue),
-					math.random(-getgenv().fnn.Camlock.ShakeValue, getgenv().fnn.Camlock.ShakeValue)
-				) * 0.1)
-				Camera.CFrame = Camera.CFrame:Lerp(Main, getgenv().fnn.Camlock.SmoothnessValue / 2, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-			else
-    			local Main = CFrame.new(Camera.CFrame.p,Plr.Character[getgenv().fnn.Camlock.Aimpart].Position + Plr.Character[getgenv().fnn.Camlock.Aimpart].Velocity * getgenv().fnn.Camlock.Prediction)
-    			Camera.CFrame = Camera.CFrame:Lerp(Main, getgenv().fnn.Camlock.SmoothnessValue / 2, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-			end
-		elseif getgenv().fnn.Camlock.Predict == false and Plr and Plr.Character and Plr.Character:FindFirstChild(getgenv().fnn.Camlock.Aimpart) then
-			if getgenv().fnn.Camlock.Shake then
-				local Main = CFrame.new(Camera.CFrame.p,Plr.Character[getgenv().fnn.Camlock.Aimpart].Position +
-				Vector3.new(
-					math.random(-getgenv().fnn.Camlock.ShakeValue, getgenv().fnn.Camlock.ShakeValue),
-					math.random(-getgenv().fnn.Camlock.ShakeValue, getgenv().fnn.Camlock.ShakeValue),
-					math.random(-getgenv().fnn.Camlock.ShakeValue, getgenv().fnn.Camlock.ShakeValue)
-				) * 0.1)
-				Camera.CFrame = Camera.CFrame:Lerp(Main, getgenv().fnn.Camlock.SmoothnessValue / 2, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-		    else
-    			local Main = CFrame.new(Camera.CFrame.p,Plr.Character[getgenv().fnn.Camlock.Aimpart].Position)
-    			Camera.CFrame = Camera.CFrame:Lerp(Main, getgenv().fnn.Camlock.SmoothnessValue / 2, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-		    end
-		end
-	end
+local lastRender = 0
+local interpolation = 0.01
+
+RunService.RenderStepped:Connect(function(delta)
+    local valueTypes = 1.375
+    lastRender = lastRender + delta
+    while lastRender > interpolation do
+        lastRender = lastRender - interpolation
+    end
+    if getgenv().Ordium.Tracing.Enabled and lockedCamTo ~= nil and getgenv().Ordium.Tracing.TracingOptions.Strength == "Hard" then
+        local Vel =  lockedCamTo.Character[getgenv().Ordium.Tracing.AimPart].Velocity / (getgenv().Ordium.Tracing.Prediction * valueTypes)
+        local Main = CFrame.new(Cam.CFrame.p, lockedCamTo.Character[getgenv().Ordium.Tracing.AimPart].Position + (Vel))
+        Cam.CFrame = Cam.CFrame:Lerp(Main ,getgenv().Ordium.Tracing.TracingOptions.Smoothness , Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+        Ordium.functions.setAimingType(lockedCamTo, getgenv().Ordium.Tracing.TracingOptions.AimingType)
+    elseif getgenv().Ordium.Tracing.Enabled and lockedCamTo ~= nil and getgenv().Ordium.Tracing.TracingOptions.Strength == "Soft" then
+        local Vel =  lockedCamTo.Character[getgenv().Ordium.Tracing.AimPart].Velocity / (getgenv().Ordium.Tracing.Prediction / valueTypes)
+        local Main = CFrame.new(Cam.CFrame.p, lockedCamTo.Character[getgenv().Ordium.Tracing.AimPart].Position + (Vel))
+        Cam.CFrame = Cam.CFrame:Lerp(Main ,getgenv().Ordium.Tracing.TracingOptions.Smoothness , Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+        Ordium.functions.setAimingType(lockedCamTo, getgenv().Ordium.Tracing.TracingOptions.AimingType)
+    else
+
+    end
 end)
 
 task.spawn(function ()
     while task.wait() do
-    	if getgenv().fnn.Silent.Enabled then
-            targ = ClosestPlrFromMouse()
-    	end
-        if Plr then
-            if getgenv().fnn.Camlock.Enabled and (Plr.Character) and getgenv().fnn.Camlock.NearestCursorAimpart then
-                getgenv().fnn.Camlock.Aimpart = tostring(GetClosestBodyPartV2(Plr.Character))
-            end
-        end
-        if targ then
-            if getgenv().fnn.Silent.Enabled and (targ.Character) and getgenv().fnn.Silent.NearestCursorAimpart then
-                getgenv().fnn.Silent.Aimpart = tostring(GetClosestBodyPart(targ.Character))
-            end
+        if Targetting then
+            Ordium.functions.setAimingType(Targetting, getgenv().Ordium.SilentAim.AimingType)
         end
     end
 end)
 
-getgenv().uhpoop = {
-    ["Enabled"] = (getgenv().fnn.GunFov.Enabled),
-    ["Double-Barrel SG"] = {["FOV"] = (getgenv().fnn.GunFov.DoubleBarrel)}, --// Db
-    ["DoubleBarrel"] = {["FOV"] = (getgenv().fnn.GunFov.DoubleBarrel)}, --// Db
-    ["Revolver"] = {["FOV"] = (getgenv().fnn.GunFov.Revolver)}, --// Rev
-    ["SMG"] = {["FOV"] = (getgenv().fnn.GunFov.Smg)}, --// Uzi/Smg
-    ["Shotgun"] = {["FOV"] = (getgenv().fnn.GunFov.Shotgun)}, --// Sg
-    ["TacticalShotgun"] = {["FOV"] = (getgenv().fnn.GunFov.TacticalShotgun)}, --// Tac
-    ["Silencer"] = {["FOV"] = (getgenv().fnn.GunFov.Silencer)}, -- smg
-    
-}                 
 
-local Script = {Functions = {}}
-    Script.Functions.getToolName = function(name)
-        local split = string.split(string.split(name, "[")[2], "]")[1]
-        return split
-    end
-    Script.Functions.getEquippedWeaponName = function()
-        if (Client.Character) and Client.Character:FindFirstChildWhichIsA("Tool") then
-           local Tool =  Client.Character:FindFirstChildWhichIsA("Tool")
-           if string.find(Tool.Name, "%[") and string.find(Tool.Name, "%]") and not string.find(Tool.Name, "Wallet") and not string.find(Tool.Name, "Phone") then
-              return Script.Functions.getToolName(Tool.Name)
-           end
-        end
-        return nil
-    end
-    RS.RenderStepped:Connect(function()
-    if Script.Functions.getEquippedWeaponName() ~= nil then
-        local WeaponSettings = getgenv().uhpoop[Script.Functions.getEquippedWeaponName()]
-        if WeaponSettings ~= nil and getgenv().fnn.GunFov.Enabled == true then
-            getgenv().fnn.Fov.Silent.Size = WeaponSettings.FOV
-        else
-            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Fov.Silent.Size
+local __index
+__index = hookmetamethod(game,"__index", function(Obj, Property)
+    if Obj:IsA("Mouse") and Property == "Hit" then
+        Targetting = Ordium.functions.returnClosestPlayer(getgenv().Ordium.SilentAim.ChanceData.Chance)
+        if Targetting ~= nil and getgenv().Ordium.SilentAim.Enabled and not Ordium.functions.aimingCheck(Targetting) then
+            local currentvelocity = Targetting.Character[getgenv().Ordium.SilentAim.AimPart].Velocity
+            local currentposition = Targetting.Character[getgenv().Ordium.SilentAim.AimPart].CFrame
+
+            return currentposition + (currentvelocity * getgenv().Ordium.SilentAim.Prediction)
         end
     end
+    return __index(Obj, Property)
 end)
-
-local Aiming = loadstring(game:HttpGet("https://raw.githubusercontent.com/GravesFr/opensourceskidded/main/s"))()
-Aiming.TeamCheck(false)
-
-
-
-local Workspace = game:GetService("Workspace")
-
-local Players = game:GetService("Players")
-
-local RunService = game:GetService("RunService")
-
-local UserInputService = game:GetService("UserInputService")
-
-
-
-local LocalPlayer = Players.LocalPlayer
-
-local Mouse = LocalPlayer:GetMouse()
-
-local CurrentCamera = Workspace.CurrentCamera
-
-
-Aiming.FOV = 50
---------------------------------------------------
---------------------------------------------------- -fov 5.5-6.6 is legit
-
-function Aiming.Check()
-    if not (Aiming.Enabled == true and Aiming.Selected ~= LocalPlayer and Aiming.SelectedPart ~= nil) then
-        return false
-    end
-end
-
-
-game:GetService("RunService").Heartbeat:Connect(
-                                function()
-                                    if
-                                        getgenv().fnn.Range.Enabled == true and getgenv().fnn.Range.Type == "Fov" and Aiming.Selected ~= nil and (Aiming.Selected.Character) and targ and targ.Character then
-                                        if
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.CloseDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.CloseFov
-                                            
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.MidDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.MidFov
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.FarDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.FarFov
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.VeryFarDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.VeryFarFov
-                                        end
-                                    end
-                                end
-                            )
-                            
-                            game:GetService("RunService").Heartbeat:Connect(
-                                function()
-                                    if
-                                        getgenv().fnn.Range.Enabled == true and getgenv().fnn.Range.Type == "Prediction" and Aiming.Selected ~= nil and (Aiming.Selected.Character) and targ and Plr.Character then
-                                        if
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.CloseDetection
-                                         then
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.ClosePrediction
-                                            
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.MidDetection
-                                         then
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.MidPrediction
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.FarDetection
-                                         then
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.FarPrediction
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.VeryFarDetection
-                                         then
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.VeryFarPrediction
-                                        end
-                                    end
-                                end
-                            )
-                            
-                            game:GetService("RunService").Heartbeat:Connect(
-                                function()
-                                    if
-                                        getgenv().fnn.Range.Enabled == true and getgenv().fnn.Range.Type == "Both" and Aiming.Selected ~= nil and (Aiming.Selected.Character) and targ and Plr.Character then
-                                        if
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.CloseDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.CloseFov
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.ClosePrediction
-                                            
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.MidDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.MidFov
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.MidPrediction
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.FarDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.FarFov
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.FarPrediction
-                                        elseif
-                                            (game.Players[Aiming.Selected.Name].Character.HumanoidRootPart.Position -
-                                                game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <
-                                                getgenv().fnn.Range.VeryFarDetection
-                                         then
-                                            getgenv().fnn.Fov.Silent.Size = getgenv().fnn.Range.VeryFarFov
-                                            getgenv().fnn.Silent.Prediction= getgenv().fnn.Range.VeryFarPrediction
-                                        end
-                                    end
-                                end
-                            )
-
-
-
-local Player = game:GetService("Players").LocalPlayer
-            local Mouse = Player:GetMouse()
-            local SpeedGlitch = false
-            Mouse.KeyDown:Connect(function(Key)
-                if getgenv().fnn.Macro.Type == "Normal" and getgenv().fnn.Macro.Enabled == true and Key == getgenv().fnn.Macro.Keybind then
-                    SpeedGlitch = not SpeedGlitch
-                    if SpeedGlitch == true then
-                        repeat game:GetService("RunService").Heartbeat:wait()
-                            keypress(0x49)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                            keypress(0x4F)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                            keyrelease(0x49)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                            keyrelease(0x4F)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                        until SpeedGlitch == false
-                    end
-                end
-            end)
-            
-            
-            
-            local Player = game:GetService("Players").LocalPlayer
-            local Mouse = Player:GetMouse()
-            local SpeedGlitch = false
-            Mouse.KeyDown:Connect(function(Key)
-                if getgenv().fnn.Macro.Type == "Shift" and getgenv().fnn.Macro.Enabled == true and Key == getgenv().fnn.Macro.Keybind then
-                    SpeedGlitch = not SpeedGlitch
-                    if SpeedGlitch == true then
-                        repeat game:GetService("RunService").Heartbeat:wait()
-
-                            keypress(0xA0)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                            keypress(0xA0)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                            keyrelease(0xA0)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                            keyrelease(0xA0)
-                            game:GetService("RunService").Heartbeat:wait()
-
-                        until SpeedGlitch == false
-                    end
-                end
-            end)
-            
-      if getgenv().fnn.Resolver.Enabled == true then 
-          local hrp
-local resolver = game:GetService("RunService")
-
-demiseuwu.Heartbeat:Connect(function()
-    pcall(function()
-        for i,v in pairs(game.Players:GetChildren()) do
-            if v ~= game.Players.LocalPlayer  then
-                hrp = v.Character.HumanoidRootPart
-                hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
-            end
-        end
-    end)
-end)
-end
-
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local Camera = workspace.CurrentCamera
-local Toggle = getgenv().tears.Key360.Toggle
-local RotationSpeed = getgenv().tears.Key360.RotationSpeed
-local Keybind = getgenv().tears.Key360.Keybind
-
-local function OnKeyPress(Input, GameProcessedEvent)
-    if Input.KeyCode == Keybind and not GameProcessedEvent then 
-        Toggle = not Toggle
-    end
-end
-            
-            
-
-    while getgenv().fnn.AutoPrediction.Enabled == true do
-    local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
-    local pingValue = string.split(ping, " ")[1]
-    local pingNumber = tonumber(pingValue)
-end   
-   
-    if pingNumber < 30 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P20)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P20)
-    elseif pingNumber < 40 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P30)
-        fnn.Silent.Prediction= (getgenv().fnn.AutoPrediction.P30)
-    elseif pingNumber < 50 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P40)
-        fnn.Silent.Prediction= (getgenv().fnn.AutoPrediction.P40)
-    elseif pingNumber < 60 then
-end
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P50)
-        fnn.Silent.Prediction= (getgenv().fnn.AutoPrediction.P50)
-    elseif pingNumber < 70 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P60)
-        fnn.Silent.Prediction= (getgenv().fnn.AutoPrediction.P60)
-    elseif pingNumber < 80 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P70)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P70)
-    elseif pingNumber < 90 then
-end
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P80)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P80)
-    elseif pingNumber < 100 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P90)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P90)
-    elseif pingNumber < 110 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P100)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P100)
-         elseif pingNumber < 120 then
-end
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P110)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P110)
-         elseif pingNumber < 130 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P120)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P120)
-         elseif pingNumber < 140 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P130)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P130)
-         elseif pingNumber < 150 then
-end
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P140)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P140)
-         elseif pingNumber < 160 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P150)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P150)
-        elseif pingNumber < 170 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P160)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P160)
-        elseif pingNumber < 180 then
-end
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P170)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P170)
-        elseif pingNumber < 190 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P180)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P180)
-        elseif pingNumber < 200 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P190)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P190)
-        elseif pingNumber < 210 then
-end
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P200)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P200)
-        elseif pingNumber < 260 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P250)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P250)
-        elseif pingNumber < 310 then
-        fnn.Camlock.Prediction = (getgenv().fnn.AutoPrediction.P300)
-        fnn.Silent.Prediction = (getgenv().fnn.AutoPrediction.P300)
-	end
- 
-    wait(0.5)
-end
