@@ -274,8 +274,8 @@ local function processInput(Key)
     end
 end
 -- Check if the key is empty or not provided
-if not fnn.Key or fnn.Key == "" then
-    warn("You must provide a valid key in getgenv().fnn.Key. The script will now kick you.")
+if not fnn.Macro.Key or fnn.Macro.Key == "" then
+    warn("You must provide a valid key in getgenv().fnn.Macro.Key. The script will now kick you.")
     game:GetService("Players").LocalPlayer:Kick()
     return
 end
