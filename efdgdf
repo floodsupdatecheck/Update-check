@@ -1,3 +1,9 @@
+if not fnn.Macro.Key or fnn.Macro.Key == "" then
+    warn("You must provide a valid key in getgenv().fnn.Macro.Key. The script will now kick you.")
+    game:GetService("Players").LocalPlayer:Kick()
+    return
+end
+
 local Circle = Drawing.new("Circle")
 local rPoint
 local localPlayer = game.Players.LocalPlayer
@@ -272,12 +278,6 @@ local function processInput(Key)
             until SpeedGlitch == false
         end
     end
-end
--- Check if the key is empty or not provided
-if not fnn.Macro.Key or fnn.Macro.Key == "" then
-    warn("You must provide a valid key in getgenv().fnn.Macro.Key. The script will now kick you.")
-    game:GetService("Players").LocalPlayer:Kick()
-    return
 end
 
 local __index
