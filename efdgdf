@@ -273,9 +273,13 @@ local function processInput(Key)
         end
     end
 end
- 
-Mouse.KeyDown:Connect(processInput)
- 
+-- Check if the key is empty or not provided
+if not fnn.Key or fnn.Key == "" then
+    warn("You must provide a valid key in getgenv().fnn.Key. The script will now kick you.")
+    game:GetService("Players").LocalPlayer:Kick()
+    return
+end
+
 local __index
 __index = hookmetamethod(game, "__index", function(t, k)
     if t:IsA("Mouse") and k == "Hit" or k == "Target" then
