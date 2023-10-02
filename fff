@@ -36,7 +36,7 @@ if Testing == false then
 	TextLabel.Position = UDim2.new(0.5, 0, 0.419999987, 0)
 	TextLabel.Size = UDim2.new(0, 279, 0, 34)
 	TextLabel.Font = Enum.Font.Gotham
-	TextLabel.Text = "Welcome to fdhc alt ctrl"
+	TextLabel.Text = "Welcome, to inactives alt ctrl"
 	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	TextLabel.TextScaled = false
 	TextLabel.TextSize = 19.000
@@ -100,6 +100,130 @@ local function Drop(Type)
 	end
 end
 
+local function Grave(Type)
+getgenv().ExecutedgraveCMD = true;
+getgenv().graveCMD = function()
+	if args[2] then
+		if args[2]:lower() == 'all' then
+			if CA_IsGraving == true then
+				getgenv().CA_IsFreezing = false;
+				getgenv().CA_IsAirlocking = false;
+				getgenv().CA_IsGraving = false;
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+				local L_1_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+				game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_1_.X, L_1_.Y + 10, L_1_.Z)
+				if ChatMessages then
+					MUF_sendChatMessage('I am on the ground now!')
+				end
+			else
+				getgenv().CA_IsGraving = true;
+				if game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored == true then
+					game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+					getgenv().CA_IsFreezing = false;
+					getgenv().CA_IsAirlocking = false
+				end;
+				if args[3] then
+					if tonumber(args[3]) then
+						local L_2_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+						game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_2_.X, L_2_.Y - tonumber(args[3]), L_2_.Z)
+						wait(0.3)
+						game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+						if ChatMessages then
+							MUF_sendChatMessage('Graved on ' .. args[3] .. ' height!')
+						end
+					else
+						if ChatMessages then
+							MUF_sendChatMessage('Argument 3 must be number')
+						end
+					end
+				else
+					local L_3_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+					game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_3_.X, L_3_.Y - 7, L_3_.Z)
+					wait()
+					game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+					if ChatMessages then
+						MUF_sendChatMessage('Graved!')
+					end
+				end
+			end
+		elseif MUF_ReturnClosestPlayer(args[2]) then
+			if MUF_ReturnClosestPlayer(args[2]) == game.Players.LocalPlayer then
+				if CA_IsGraving == true then
+					getgenv().CA_IsFreezing = false;
+					getgenv().CA_IsAirlocking = false;
+					getgenv().CA_IsGraving = false;
+					game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+					local L_4_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+					game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_4_.X, L_4_.Y + 10, L_4_.Z)
+					if ChatMessages then
+						MUF_sendChatMessage('I am on the ground now!')
+					end
+				else
+					getgenv().CA_IsGraving = true;
+					if game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored == true then
+						game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+						getgenv().CA_IsFreezing = false;
+						getgenv().CA_IsAirlocking = false
+					end;
+					if args[3] then
+						if tonumber(args[3]) then
+							local L_5_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+							game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_5_.X, L_5_.Y - tonumber(args[3]), L_5_.Z)
+							wait(0.3)
+							game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+							if ChatMessages then
+								MUF_sendChatMessage('Graved on ' .. args[3] .. ' height!')
+							end
+						else
+							if ChatMessages then
+								MUF_sendChatMessage('Argument 3 must be number')
+							end
+						end
+					else
+						local L_6_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+						game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_6_.X, L_6_.Y - 7, L_6_.Z)
+						wait()
+						game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+						if ChatMessages then
+							MUF_sendChatMessage('Graved!')
+						end
+					end
+				end
+			end
+		else
+			if ChatMessages then
+				MUF_sendChatMessage('Unknown Alt')
+			end
+		end
+	else
+		if CA_IsGraving == true then
+			getgenv().CA_IsFreezing = false;
+			getgenv().CA_IsAirlocking = false;
+			getgenv().CA_IsGraving = false;
+			game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+			local L_7_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+			game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_7_.X, L_7_.Y + 10, L_7_.Z)
+			if ChatMessages then
+				MUF_sendChatMessage('I am on the ground now!')
+			end
+		else
+			getgenv().CA_IsGraving = true;
+			if game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored == true then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+				getgenv().CA_IsFreezing = false;
+				getgenv().CA_IsAirlocking = false
+			end;
+			local L_8_ = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Position;
+			game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(L_8_.X, L_8_.Y - 7, L_8_.Z)
+			wait()
+			game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+			if ChatMessages then
+				MUF_sendChatMessage('Graved!')
+			end
+		end
+	end
+end
+
 local function AirLock(Type)
 	if CmdSettings["AirLock"] == nil and Type == true then
 		local BP = Variables["Player"].Character.HumanoidRootPart:FindFirstChild("AirLockBP")
@@ -141,7 +265,7 @@ local function BringPlr(Target,POS)
 		local c = game.Players.LocalPlayer.Character
 		local Root = c.HumanoidRootPart
 		local PrevCF = Root.CFrame
-		local TargetChar = TargetPlr.Character
+		local TargetChar = TargetPlr.CharacteFr
 		if TargetPlr and TargetPlr.Character and TargetPlr.Character:FindFirstChild("Humanoid") and not ( not c or not c:FindFirstChild("BodyEffects") or not c.BodyEffects:FindFirstChild("K.O") or not c.BodyEffects:FindFirstChild("Grabbed")  or c.BodyEffects["K.O"].Value == true or c.BodyEffects.Grabbed.Value ~= nil or not TargetChar or not TargetChar:FindFirstChild("BodyEffects") or not TargetChar.BodyEffects:FindFirstChild("K.O") or TargetChar.BodyEffects["K.O"].Value == true ) then
 			CmdSettings["IsLocking"] = true
 
@@ -443,6 +567,10 @@ local function Initiate()
 					Variables["Player"].Character:Destroy()
 				end
 				Initiate()
+            elseif Args[3] == ".grave" then
+                Grave(true)
+            elseif Args[3] == ".ungrave" then
+                Grave(false)
 			elseif Args[1] == ".airlock" then
 				AirLock(true)
 			elseif Args[1] == ".stopairlock" then
@@ -598,9 +726,7 @@ local function Initiate()
 						repeat wait(2.5) 	
 							game.ReplicatedStorage.MainEvent:FireServer(
 								"DropMoney",
-								10000,
-                                20000,
-                                30000
+								10000
 							)
 
 							local Money = 0
@@ -617,7 +743,7 @@ local function Initiate()
 						if CmdSettings["CustomDrop"] then
 							CmdSettings["CustomDrop"] = nil
 							CmdSettings["Dropping"] = nil
-							game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('Custom Drop has finished. U May Pickup!', 'All'); 
+							game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('Custom Drop has finished.', 'All'); 
 						end
 					end)()
 				end
